@@ -1,5 +1,5 @@
 <?php
-namespace OperationLogsPlugin\Model\Table;
+namespace OperationLogs\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -9,14 +9,14 @@ use Cake\Validation\Validator;
 /**
  * OperationLogs Model
  *
- * @method \OperationLogsPlugin\Model\Entity\OperationLog get($primaryKey, $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog newEntity($data = null, array $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog[] newEntities(array $data, array $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog[] patchEntities($entities, array $data, array $options = [])
- * @method \OperationLogsPlugin\Model\Entity\OperationLog findOrCreate($search, callable $callback = null, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog get($primaryKey, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog newEntity($data = null, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog[] newEntities(array $data, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog[] patchEntities($entities, array $data, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLog findOrCreate($search, callable $callback = null, $options = [])
  */
 class OperationLogsTable extends Table
 {

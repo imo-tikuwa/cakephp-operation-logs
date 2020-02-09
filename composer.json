@@ -1,6 +1,6 @@
 {
     "name": "imo-tikuwa/cakephp-operation-logs",
-    "description": "OperationLogsPlugin plugin for CakePHP",
+    "description": "OperationLogs plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
     "require": {
@@ -11,12 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "OperationLogsPlugin\\": "src/"
+            "OperationLogs\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "OperationLogsPlugin\\Test\\": "tests/",
+            "OperationLogs\\Test\\": "tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
     }

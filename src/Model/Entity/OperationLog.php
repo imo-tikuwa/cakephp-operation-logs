@@ -1,5 +1,5 @@
 <?php
-namespace OperationLogsPlugin\Model\Entity;
+namespace OperationLogs\Model\Entity;
 
 use Cake\ORM\Entity;
 

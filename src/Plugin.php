@@ -1,11 +1,11 @@
 <?php
 
-namespace OperationLogsPlugin;
+namespace OperationLogs;
 
 use Cake\Core\BasePlugin;
 
 /**
- * Plugin for OperationLogsPlugin
+ * Plugin for OperationLogs
  */
 class Plugin extends BasePlugin
 {

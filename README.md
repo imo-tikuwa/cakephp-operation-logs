@@ -1,4 +1,4 @@
-# OperationLogsPlugin plugin for CakePHP
+# OperationLogs plugin for CakePHP
 
 ## Installation
 
@@ -28,7 +28,7 @@ CREATE TABLE `operation_logs` (
 and append middleware.
 
 ```
-use OperationLogsPlugin\Middleware\OperationLogsMiddleware;
+use OperationLogs\Middleware\OperationLogsMiddleware;
 
     public function middleware($middlewareQueue)
     {
