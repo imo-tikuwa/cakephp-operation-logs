@@ -28,7 +28,7 @@ CREATE TABLE `operation_logs` (
 and append middleware.
 
 ```
-use OperationLogs\Middleware\OperationLogsMiddleware;
++use OperationLogs\Middleware\OperationLogsMiddleware;
 
     public function middleware($middlewareQueue)
     {
@@ -38,4 +38,14 @@ use OperationLogs\Middleware\OperationLogsMiddleware;
             ;
         return $middlewareQueue;
     }
+```
+
+## Options
+```
+        $middlewareQueue
+            // Add operation_logs middleware.
+            ->add(OperationLogsMiddleware::class, [
+                'exclude_urls' => []
+            ])
+            ;
 ```
