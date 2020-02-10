@@ -8,6 +8,7 @@ use Cake\Routing\Router;
 use Cake\I18n\Time;
 use Cake\Core\InstanceConfigTrait;
 use OperationLogs\Util\OperationLogsUtils;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * OperationLogs middleware
@@ -66,6 +67,7 @@ class OperationLogsMiddleware
 		// リクエスト後処理
 		$response_time = Time::now();
 
+		$this->_create_table_if_not_exists();
 		$this->OperationLogs = TableRegistry::getTableLocator()->get('operation_logs');
 		$entity = $this->OperationLogs->newEntity([
 				'client_ip' => Router::getRequest()->clientIp(),
@@ -77,5 +79,24 @@ class OperationLogsMiddleware
 		$this->OperationLogs->save($entity);
 
 		return $response;
+	}
+
+	/**
+	 * 操作ログテーブル作成
+	 */
+	private function _create_table_if_not_exists() {
+		$connection = ConnectionManager::get('default');
+		$query = <<<EOL
+CREATE TABLE IF NOT EXISTS `operation_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `client_ip` text NOT NULL COMMENT 'クライアントIP',
+  `user_agent` text NOT NULL COMMENT 'ユーザーエージェント',
+  `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
+  `request_time` datetime NOT NULL COMMENT 'リクエスト日時',
+  `response_time` datetime NOT NULL COMMENT 'レスポンス日時',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログ';
+EOL;
+		return $connection->execute($query);
 	}
 }

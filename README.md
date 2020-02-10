@@ -11,24 +11,10 @@ composer require imo-tikuwa/cakephp-operation-logs
 ```
 
 ## How to Use
-create table.
+append middleware.
 
 ```
-CREATE TABLE `operation_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `client_ip` text NOT NULL COMMENT 'クライアントIP',
-  `user_agent` text NOT NULL COMMENT 'ユーザーエージェント',
-  `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
-  `request_time` datetime NOT NULL COMMENT 'リクエスト日時',
-  `response_time` datetime NOT NULL COMMENT 'レスポンス日時',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログ';
-```
-
-and append middleware.
-
-```
-+use OperationLogs\Middleware\OperationLogsMiddleware;
+use OperationLogs\Middleware\OperationLogsMiddleware;
 
     public function middleware($middlewareQueue)
     {
@@ -38,14 +24,4 @@ and append middleware.
             ;
         return $middlewareQueue;
     }
-```
-
-## Options
-```
-        $middlewareQueue
-            // Add operation_logs middleware.
-            ->add(OperationLogsMiddleware::class, [
-                'exclude_urls' => []
-            ])
-            ;
 ```
