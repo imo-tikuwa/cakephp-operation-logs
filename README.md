@@ -26,3 +26,23 @@ Append middleware to Application.php
         return $middlewareQueue;
     }
 ```
+
+## setting exclude_urls.
+```
+use OperationLogs\Middleware\OperationLogsMiddleware;
+
+    public function middleware($middlewareQueue)
+    {
+        $middlewareQueue
+            // Add operation_logs middleware.
+            ->add(new OperationLogsMiddleware([
+                'exclude_urls' => [
+                    '/debug-kit',
+                    '/cake3-admin-baker',
+                    '/api'
+                ]
+            ]))
+            ;
+        return $middlewareQueue;
+    }
+```
