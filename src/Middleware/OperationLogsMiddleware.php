@@ -71,7 +71,7 @@ class OperationLogsMiddleware
 		$this->OperationLogs = TableRegistry::getTableLocator()->get('operation_logs');
 		$entity = $this->OperationLogs->newEntity([
 				'client_ip' => Router::getRequest()->clientIp(),
-				'user_agent' => $request->getHeader('User-Agent')[0],
+				'user_agent' => @$request->getHeader('User-Agent')[0],
 				'request_url' => $request_url,
 				'request_time' => $request_time,
 				'response_time' => $response_time,
@@ -90,7 +90,7 @@ class OperationLogsMiddleware
 CREATE TABLE IF NOT EXISTS `operation_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `client_ip` text NOT NULL COMMENT 'クライアントIP',
-  `user_agent` text NOT NULL COMMENT 'ユーザーエージェント',
+  `user_agent` text DEFAULT NULL COMMENT 'ユーザーエージェント',
   `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
   `request_time` datetime NOT NULL COMMENT 'リクエスト日時',
   `response_time` datetime NOT NULL COMMENT 'レスポンス日時',
