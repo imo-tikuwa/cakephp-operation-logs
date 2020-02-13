@@ -97,6 +97,30 @@ CREATE TABLE IF NOT EXISTS `operation_logs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログ';
 EOL;
-		return $connection->execute($query);
+		$connection->execute($query);
+
+		$query = <<<EOL
+CREATE TABLE IF NOT EXISTS `operation_logs_daily` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `target_ymd` date NOT NULL COMMENT '対象日',
+  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
+  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
+  `counter` int(11) NOT NULL COMMENT 'カウンタ',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(日毎)';
+EOL;
+		$connection->execute($query);
+
+		$query = <<<EOL
+CREATE TABLE IF NOT EXISTS `operation_logs_monthly` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `target_ym` int(6) NOT NULL COMMENT '対象年月',
+  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
+  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
+  `counter` int(11) NOT NULL COMMENT 'カウンタ',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(月毎)';
+EOL;
+		$connection->execute($query);
 	}
 }
