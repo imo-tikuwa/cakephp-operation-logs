@@ -14,7 +14,7 @@ composer require imo-tikuwa/cakephp-operation-logs:dev-master
 ## How to Use
 Load plugin to bootstrap.php
 ```
-Plugin::load('OperationLogs');
+Plugin::load('OperationLogs', ['bootstrap' => true]);
 ```
 
 Append middleware to Application.php
@@ -38,7 +38,7 @@ use OperationLogs\Middleware\OperationLogsMiddleware;
 ```
 
 ## Data summary commands.
-daily_summaryコマンドとmonthly_summaryコマンドがあります。  
+daily_summaryコマンド、monthly_summaryコマンド、hourly_summaryコマンドがあります。  
 operation_logsテーブルのデータを元にクライアントIP、ユーザーエージェント、リクエストURLなどでグルーピングしたデータを集計します。  
 
 daily_summaryコマンドは--target_ymdオプションで集計日を設定可能。  
@@ -47,8 +47,14 @@ daily_summaryコマンドは--target_ymdオプションで集計日を設定可�
 
 monthly_summaryコマンドは--target_ymオプションで集計年月を6桁の数字で設定可能。  
 未指定の時は先月のデータを集計します。  
-データはoperation_logs_monthlyテーブルに記録されます。
+データはoperation_logs_monthlyテーブルに記録されます。  
+
+hourly_summaryコマンドは--target_ymdオプションで集計日を設定可能。  
+未指定の時は前日のデータを集計します。  
+1時間単位でデータを集計します。  
+データはoperation_logs_hourlyテーブルに記録されます。
 ```
 cake daily_summary --target_ymd=2020-02-13
 cake monthly_summary --target_ym=202002
+cake hourly_summary --target_ymd=2020-02-13
 ```
