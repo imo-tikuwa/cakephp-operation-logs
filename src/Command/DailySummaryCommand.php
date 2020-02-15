@@ -8,6 +8,13 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * 日毎集計コマンド
+ * @author tikuwa
+ *
+ * @property \OperationLogs\Model\Table\OperationLogsTable $OperationLogs
+ * @property \OperationLogs\Model\Table\OperationLogsDailyTable $OperationLogsDaily
+ */
 class DailySummaryCommand extends Command
 {
 	private $start_msg = "############ daily summary command start. ##############";
@@ -66,17 +73,16 @@ class DailySummaryCommand extends Command
 		// 集計(全体)
 		$operation_logs_daily_entities[] = $this->OperationLogsDaily->newEntity([
 				'target_ymd' => $target_ymd,
-				'summary_type' => 'all',
+				'summary_type' => OL_SUMMARY_TYPE_ALL,
 				'groupedby' => null,
 				'counter' => $operation_logs_count
 		]);
 
 		// IPアドレス/ユーザーエージェント/リクエストURLごとの集計データを作成
-		foreach ([
-				"ip" => "client_ip",
-				"ua" => "user_agent",
-				"url" => "request_url"
-		] as $summary_type => $summary_column) {
+		foreach (Configure::read('OperationLogs.summary_types') as $summary_type => $summary_column) {
+			if ($summary_type == OL_SUMMARY_TYPE_ALL) {
+				continue;
+			}
 			$grouped_logs = Hash::combine($operation_logs, '{n}.id', '{n}', "{n}.{$summary_column}");
 			foreach ($grouped_logs as $groupedby => $grouped_data) {
 				// ユーザーエージェントなんかは空のパターンがある。

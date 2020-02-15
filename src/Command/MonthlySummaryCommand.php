@@ -8,6 +8,16 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * 月毎集計コマンド
+ *
+ * ※月毎の集計データは日毎の集計データ(operation_logs_daily)を参照して作成するので先に日毎の集計処理を実行してください
+ *
+ * @author tikuwa
+ *
+ * @property \OperationLogs\Model\Table\OperationLogsDailyTable $OperationLogsDaily
+ * @property \OperationLogs\Model\Table\OperationLogsMonthlyTable $OperationLogsMonthly
+ */
 class MonthlySummaryCommand extends Command
 {
 	private $start_msg = "############ monthly summary command start. ############";
@@ -49,7 +59,6 @@ class MonthlySummaryCommand extends Command
 
 		// 集計対象データを取得
 		$daily_operation_logs = $this->OperationLogsDaily->find()->select(['id', 'summary_type', 'groupedby', 'counter'])->where([
-				'summary_type <>' => 'all',
 				'target_ymd >=' => $target_ym_date->format('Y-m-d'),
 				'target_ymd <=' => $target_ym_date->modify('last day of this month')->format('Y-m-d')
 		])
@@ -59,8 +68,7 @@ class MonthlySummaryCommand extends Command
 			$io->out("operation_logs_daily not found.\n{$this->end_msg}");
 			$this->abort();
 		}
-		$daily_operation_logs_count = count($daily_operation_logs);
-		$io->out("daily_operation_logs {$daily_operation_logs_count} records found.");
+		$io->out("daily_operation_logs " . count($daily_operation_logs) . " records found.");
 
 		// いったん対象年月のデータを全削除
 		$this->OperationLogsMonthly->deleteAll(['target_ym' => $target_ym]);
@@ -68,27 +76,17 @@ class MonthlySummaryCommand extends Command
 		// 集計データを作成
 		$operation_logs_monthly_entities = [];
 
-		// IPアドレス/ユーザーエージェント/リクエストURLごとの集計データを作成
+		// 全体/IPアドレス/ユーザーエージェント/リクエストURLごとの月毎集計データを作成
 		$grouped_logs = Hash::combine($daily_operation_logs, '{n}.id', '{n}', "{n}.summary_type");
-
-		// 集計(全体)はとりあえずIPアドレスの集計データを元に作成
-		$total_count = 0;
-		foreach ($grouped_logs['ip'] as $id => $data) {
-			$total_count += $data['counter'];
-		}
-		$operation_logs_monthly_entities[] = $this->OperationLogsMonthly->newEntity([
-				'target_ym' => $target_ym,
-				'summary_type' => 'all',
-				'groupedby' => null,
-				'counter' => $total_count
-		]);
-
 		foreach ($grouped_logs as $summary_type => $summary_data) {
 			$grouped_data = Hash::combine($summary_data, '{n}.id', '{n}', '{n}.groupedby');
 			foreach ($grouped_data as $groupedby => $each_group_data) {
 				$counter = 0;
 				foreach($each_group_data as $each_data) {
 					$counter += $each_data['counter'];
+				}
+				if ($summary_type === OL_SUMMARY_TYPE_ALL) {
+					$groupedby = null;
 				}
 				$operation_logs_monthly_entities[] = $this->OperationLogsMonthly->newEntity([
 					'target_ym' => $target_ym,
@@ -97,7 +95,7 @@ class MonthlySummaryCommand extends Command
 					'counter' => $counter
 				]);
 			}
-			$io->out("daily_operation_logs groupd by {$summary_type} to makes " . count($each_group_data) . " records.");
+			$io->out("daily_operation_logs groupd by {$summary_type} to makes " . count($grouped_data) . " records.");
 		}
 
 		// 保存

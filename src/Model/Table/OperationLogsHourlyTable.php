@@ -5,18 +5,18 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * OperationLogsDaily Model
+ * OperationLogsHourly Model
  *
- * @method \OperationLogs\Model\Entity\OperationLogsDaily get($primaryKey, $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily newEntity($data = null, array $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily[] newEntities(array $data, array $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily[] patchEntities($entities, array $data, array $options = [])
- * @method \OperationLogs\Model\Entity\OperationLogsDaily findOrCreate($search, callable $callback = null, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly get($primaryKey, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly newEntity($data = null, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly[] newEntities(array $data, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly[] patchEntities($entities, array $data, array $options = [])
+ * @method \OperationLogs\Model\Entity\OperationLogsHourly findOrCreate($search, callable $callback = null, $options = [])
  */
-class OperationLogsDailyTable extends Table
+class OperationLogsHourlyTable extends Table
 {
 
     /**
@@ -29,7 +29,7 @@ class OperationLogsDailyTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('operation_logs_daily');
+        $this->setTable('operation_logs_hourly');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
     }
@@ -47,9 +47,9 @@ class OperationLogsDailyTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->date('target_ymd')
-            ->requirePresence('target_ymd', 'create')
-            ->notEmpty('target_ymd');
+            ->dateTime('target_time')
+            ->requirePresence('target_time', 'create')
+            ->notEmpty('target_time');
 
         $validator
             ->scalar('summary_type')
