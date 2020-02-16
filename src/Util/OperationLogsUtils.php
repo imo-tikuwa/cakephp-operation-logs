@@ -78,12 +78,15 @@ class OperationLogsUtils {
 	public static function findHourlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
 
 		if (is_null($target_date)) {
-			$target_date = new \DateTime();
+			$date = new \DateTime();
+		} else {
+			// 引数のDateTimeオブジェクトへのmodifyによる影響を残さないようcloneする
+			$date = clone $target_date;
 		}
 
 		$operation_logs_hourly = TableRegistry::getTableLocator()->get('OperationLogsHourly');
-		$format_date = $target_date->format('Y-m-d');
-		$slash_format_date = $target_date->format('Y/m/d');
+		$format_date = $date->format('Y-m-d');
+		$slash_format_date = $date->format('Y/m/d');
 		$summary_logs = $operation_logs_hourly->find()->where([
 				'summary_type' => $summary_type,
 				'target_time >=' => "{$format_date} 00:00:00",
@@ -130,14 +133,17 @@ class OperationLogsUtils {
 	public static function findDailySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
 
 		if (is_null($target_date)) {
-			$target_date = new \DateTime();
+			$date = new \DateTime();
+		} else {
+			// 引数のDateTimeオブジェクトへのmodifyによる影響を残さないようcloneする
+			$date = clone $target_date;
 		}
 
 		$operation_logs_daily = TableRegistry::getTableLocator()->get('OperationLogsDaily');
-		$target_ym = $target_date->format('Y/m');
-		$from_date = $target_date->format('Y-m-01');
-		$to_date = $target_date->modify('last day of this month')->format('Y-m-d');
-		$last_day = $target_date->format('d');
+		$target_ym = $date->format('Y/m');
+		$from_date = $date->format('Y-m-01');
+		$to_date = $date->modify('last day of this month')->format('Y-m-d');
+		$last_day = $date->format('d');
 		$summary_logs = $operation_logs_daily->find()->where([
 				'summary_type' => $summary_type,
 				'target_ymd >=' => $from_date,
@@ -184,12 +190,15 @@ class OperationLogsUtils {
 	public static function findMonthlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
 
 		if (is_null($target_date)) {
-			$target_date = new \DateTime();
+			$date = new \DateTime();
+		} else {
+			// 引数のDateTimeオブジェクトへのmodifyによる影響を残さないようcloneする
+			$date = clone $target_date;
 		}
 
 		$operation_logs_monthly = TableRegistry::getTableLocator()->get('OperationLogsMonthly');
-		$to_ym = $target_date->format('Ym');
-		$from_ym = $target_date->modify('-12 month')->format('Ym');
+		$to_ym = $date->format('Ym');
+		$from_ym = $date->modify('-12 month')->format('Ym');
 		$summary_logs = $operation_logs_monthly->find()->where([
 				'summary_type' => $summary_type,
 				'target_ym >=' => $from_ym,
