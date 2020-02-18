@@ -7,6 +7,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Core\Configure;
 
 /**
  * 日毎集計コマンド
