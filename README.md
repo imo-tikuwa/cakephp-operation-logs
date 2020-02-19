@@ -17,6 +17,11 @@ Load plugin to bootstrap.php
 Plugin::load('OperationLogs', ['bootstrap' => true]);
 ```
 
+Create MySQL for operation_logs.
+```
+cake init_operation_logs
+```
+
 Append middleware to Application.php
 ```
 use OperationLogs\Middleware\OperationLogsMiddleware;
