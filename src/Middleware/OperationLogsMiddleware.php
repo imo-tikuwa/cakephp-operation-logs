@@ -55,19 +55,18 @@ class OperationLogsMiddleware
 		// 除外設定
 		$request_url = $request->getUri()->getPath();
 		foreach ($this->getConfig('exclude_urls') as $exclude_url) {
-			if (OperationLogsUtils::starts_with($request_url, $exclude_url)) {
+			if (OperationLogsUtils::startsWith($request_url, $exclude_url)) {
 				return $next($request, $response);
 			}
 		}
 
-		$request_time = Time::now();
+		$request_time = $this->_getCurrentDateTime();
 
 		$response = $next($request, $response);
 
 		// リクエスト後処理
-		$response_time = Time::now();
+		$response_time = $this->_getCurrentDateTime();
 
-		$this->_create_table_if_not_exists();
 		$this->OperationLogs = TableRegistry::getTableLocator()->get('operation_logs');
 		$entity = $this->OperationLogs->newEntity([
 				'client_ip' => Router::getRequest()->clientIp(),
@@ -82,57 +81,13 @@ class OperationLogsMiddleware
 	}
 
 	/**
-	 * 操作ログテーブル作成
+	 * ミリ秒(小数点3桁)付きのDateTimeオブジェクトを返す
+	 * @return \DateTime
 	 */
-	private function _create_table_if_not_exists() {
-		$connection = ConnectionManager::get('default');
-		$query = <<<EOL
-CREATE TABLE IF NOT EXISTS `operation_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `client_ip` text NOT NULL COMMENT 'クライアントIP',
-  `user_agent` text DEFAULT NULL COMMENT 'ユーザーエージェント',
-  `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
-  `request_time` datetime NOT NULL COMMENT 'リクエスト日時',
-  `response_time` datetime NOT NULL COMMENT 'レスポンス日時',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログ';
-EOL;
-		$connection->execute($query);
-
-		$query = <<<EOL
-CREATE TABLE IF NOT EXISTS `operation_logs_hourly` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `target_time` datetime NOT NULL COMMENT '対象日時',
-  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
-  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
-  `counter` int(11) NOT NULL COMMENT 'カウンタ',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(1時間毎)';
-EOL;
-		$connection->execute($query);
-
-		$query = <<<EOL
-CREATE TABLE IF NOT EXISTS `operation_logs_daily` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `target_ymd` date NOT NULL COMMENT '対象日',
-  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
-  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
-  `counter` int(11) NOT NULL COMMENT 'カウンタ',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(日毎)';
-EOL;
-		$connection->execute($query);
-
-		$query = <<<EOL
-CREATE TABLE IF NOT EXISTS `operation_logs_monthly` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `target_ym` int(6) NOT NULL COMMENT '対象年月',
-  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
-  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
-  `counter` int(11) NOT NULL COMMENT 'カウンタ',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(月毎)';
-EOL;
-		$connection->execute($query);
+	private function _getCurrentDateTime() {
+		list($microtime, $unixtime) = explode(" ", microtime(false));
+		$milliseconds = substr($microtime, 1, 4);
+		$datetimes = date('Y-m-d H:i:s', $unixtime);
+		return (new \DateTime("{$datetimes}{$milliseconds}"))->format('Y-m-d H:i:s.u');
 	}
 }

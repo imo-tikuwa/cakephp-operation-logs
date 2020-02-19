@@ -18,7 +18,7 @@ class OperationLogsUtils {
 	 * @param string $needle
 	 * @return boolean
 	 */
-	public static function starts_with($haystack, $needle) {
+	public static function startsWith($haystack, $needle) {
 		return $needle === "" || strpos($haystack, $needle) === 0;
 	}
 
@@ -28,18 +28,18 @@ class OperationLogsUtils {
 	 * @param string $needle
 	 * @return boolean
 	 */
-	public static function ends_with($haystack, $needle) {
+	public static function endsWith($haystack, $needle) {
 		return $needle === "" || substr($haystack, - strlen($needle)) === $needle;
 	}
 
 	/**
 	 * 集計データを取得する
-	 * @param string $summary_type
 	 * @param string $date_type
+	 * @param string $summary_type
 	 * @param \DateTime $target_date
 	 * @return NULL
 	 */
-	public static function find_summary_logs($summary_type = OL_SUMMARY_TYPE_ALL, $date_type = OL_DATE_TYPE_DAILY, \DateTime $target_date = null) {
+	public static function findSummaryLogs($date_type = OL_DATE_TYPE_DAILY, $summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
 
 		if (is_null($target_date)) {
 			$target_date = new \DateTime();
