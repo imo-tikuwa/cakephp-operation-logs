@@ -12,6 +12,8 @@ use Cake\ORM\Entity;
  * @property string $request_url
  * @property \Cake\I18n\FrozenTime $request_time
  * @property \Cake\I18n\FrozenTime $response_time
+ *
+ * @property float $exec_time
  */
 class OperationLog extends Entity
 {
@@ -32,4 +34,18 @@ class OperationLog extends Entity
         'request_time' => true,
         'response_time' => true
     ];
+
+    /**
+     * リクエストの実行時間を返す(単位：秒)
+     * @return float
+     */
+    protected function _getExecTime() {
+    	// Ymはさすがにいらないと思うので省略
+    	$request_time = $this->request_time->format('dHis.u');
+    	$response_time = $this->response_time->format('dHis.u');
+    	$diff = $response_time - $request_time;
+    	// 小数3桁以後切り捨て
+    	$diff = round($diff - 0.5 * pow(0.1, 3), 3, PHP_ROUND_HALF_UP);
+    	return $diff;
+    }
 }

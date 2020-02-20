@@ -3,6 +3,7 @@ namespace OperationLogs\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Database\Schema\TableSchema;
 
 /**
  * OperationLogs Model
@@ -32,6 +33,19 @@ class OperationLogsTable extends Table
         $this->setTable('operation_logs');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+    }
+
+    /**
+     * TableSchemaの初期化処理
+     * {@inheritDoc}
+     * @see \Cake\ORM\Table::_initializeSchema()
+     */
+    protected function _initializeSchema(TableSchema $schema) {
+
+        // リクエスト日時とレスポンス日時のカラムタイプ設定をデフォルトのdatetimeから独自定義したdatetimemicroへ上書き
+        $schema->setColumnType("request_time", 'datetimemicro');
+        $schema->setColumnType("response_time", 'datetimemicro');
+        return $schema;
     }
 
     /**
