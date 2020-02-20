@@ -22,8 +22,8 @@ class HourlySummaryCommand extends Command
 	private $end_msg   = "############ hourly summary command end.   #############";
 
 	public function __construct() {
-		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs');
-		$this->OperationLogsHourly = TableRegistry::getTableLocator()->get('OperationLogsHourly');
+		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
+		$this->OperationLogsHourly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsHourly');
 	}
 
 	/**

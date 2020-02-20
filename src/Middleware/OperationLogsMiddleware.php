@@ -67,7 +67,7 @@ class OperationLogsMiddleware
 		// リクエスト後処理
 		$response_time = $this->_getCurrentDateTime();
 
-		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs');
+		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
 		$entity = $this->OperationLogs->newEntity([
 				'client_ip' => Router::getRequest()->clientIp(),
 				'user_agent' => @$request->getHeader('User-Agent')[0],

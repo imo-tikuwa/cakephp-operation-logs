@@ -44,6 +44,9 @@ class OperationLog extends Entity
     	$request_time = $this->request_time->format('dHis.u');
     	$response_time = $this->response_time->format('dHis.u');
     	$diff = $response_time - $request_time;
+    	if ($diff <= 0) {
+    		return 0;
+    	}
     	// 小数3桁以後切り捨て
     	$diff = round($diff - 0.5 * pow(0.1, 3), 3, PHP_ROUND_HALF_UP);
     	return $diff;

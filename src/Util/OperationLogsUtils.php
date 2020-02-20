@@ -84,7 +84,7 @@ class OperationLogsUtils {
 			$date = clone $target_date;
 		}
 
-		$operation_logs_hourly = TableRegistry::getTableLocator()->get('OperationLogsHourly');
+		$operation_logs_hourly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsHourly');
 		$format_date = $date->format('Y-m-d');
 		$slash_format_date = $date->format('Y/m/d');
 		$summary_logs = $operation_logs_hourly->find()->where([
@@ -139,7 +139,7 @@ class OperationLogsUtils {
 			$date = clone $target_date;
 		}
 
-		$operation_logs_daily = TableRegistry::getTableLocator()->get('OperationLogsDaily');
+		$operation_logs_daily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
 		$target_ym = $date->format('Y/m');
 		$from_date = $date->format('Y-m-01');
 		$to_date = $date->modify('last day of this month')->format('Y-m-d');
@@ -196,7 +196,7 @@ class OperationLogsUtils {
 			$date = clone $target_date;
 		}
 
-		$operation_logs_monthly = TableRegistry::getTableLocator()->get('OperationLogsMonthly');
+		$operation_logs_monthly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsMonthly');
 		$to_ym = $date->format('Ym');
 		$from_ym = $date->modify('-12 month')->format('Ym');
 		$summary_logs = $operation_logs_monthly->find()->where([

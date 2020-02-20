@@ -22,8 +22,8 @@ class DailySummaryCommand extends Command
 	private $end_msg   = "############ daily summary command end.   ##############";
 
 	public function __construct() {
-		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs');
-		$this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogsDaily');
+		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
+		$this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
 	}
 
 	/**

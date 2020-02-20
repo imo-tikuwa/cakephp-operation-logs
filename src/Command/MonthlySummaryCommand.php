@@ -24,8 +24,8 @@ class MonthlySummaryCommand extends Command
 	private $end_msg   = "############ monthly summary command end.   ############";
 
 	public function __construct() {
-		$this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogsDaily');
-		$this->OperationLogsMonthly = TableRegistry::getTableLocator()->get('OperationLogsMonthly');
+		$this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
+		$this->OperationLogsMonthly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsMonthly');
 	}
 
 	/**
