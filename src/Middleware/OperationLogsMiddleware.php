@@ -74,8 +74,8 @@ class OperationLogsMiddleware
 				'request_url' => $request_url,
 				'request_time' => $request_time,
 				'response_time' => $response_time,
-		]);
-		$this->OperationLogs->save($entity);
+		], ['validate' => false]);
+		$this->OperationLogs->save($entity, ['validate' => false]);
 
 		return $response;
 	}
