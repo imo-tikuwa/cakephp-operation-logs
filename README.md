@@ -7,8 +7,7 @@ You can install this plugin into your CakePHP application using [composer](https
 The recommended way to install composer packages is:
 
 ```
-composer config repositories.imo-tikuwa/cakephp-operation-logs vcs https://github.com/imo-tikuwa/cakephp-operation-logs
-composer require imo-tikuwa/cakephp-operation-logs:dev-master
+composer require imo-tikuwa/cakephp-operation-logs
 ```
 
 ## How to Use
@@ -17,7 +16,8 @@ Load plugin to bootstrap.php
 Plugin::load('OperationLogs', ['bootstrap' => true]);
 ```
 
-Create MySQL for operation_logs.
+Execute the database table initialization command.   
+(Executing the command creates operation_logs, operation_logs_hourly, operation_logs_daily, operation_logs_monthly tables)
 ```
 cake init_operation_logs
 ```
@@ -35,6 +35,13 @@ use OperationLogs\Middleware\OperationLogsMiddleware;
                     '/debug-kit',
                     '/cake3-admin-baker',
                     '/api'
+                ]
+                'exclude_ips' => [
+                    '192.168',
+                    '::'
+                ],
+                'exclude_user_agents' => [
+                    'Firefox/73'
                 ]
             ]))
             ;
