@@ -29,6 +29,10 @@ class OperationLogsMiddleware
 			'exclude_urls' => [
 					'/debug-kit',
 			],
+			'exclude_ips' => [
+			],
+			'exclude_user_agents' => [
+			]
 	];
 
 	/**
@@ -37,7 +41,15 @@ class OperationLogsMiddleware
 	 */
 	public function __construct(array $config = [])
 	{
-		$this->setConfig($config);
+		if (isset($config['exclude_urls'])) {
+			$this->setConfig('exclude_urls', $config['exclude_urls'], false);
+		}
+		if (isset($config['exclude_ips'])) {
+			$this->setConfig('exclude_ips', $config['exclude_ips'], false);
+		}
+		if (isset($config['exclude_user_agents'])) {
+			$this->setConfig('exclude_user_agents', $config['exclude_user_agents'], false);
+		}
 	}
 
 	/**
@@ -51,26 +63,54 @@ class OperationLogsMiddleware
 	public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
 	{
 		// リクエスト前処理
-
-		// 除外設定
+		// ------------------------------
+		// 除外設定(リクエストURL)
 		$request_url = $request->getUri()->getPath();
-		foreach ($this->getConfig('exclude_urls') as $exclude_url) {
-			if (OperationLogsUtils::startsWith($request_url, $exclude_url)) {
-				return $next($request, $response);
+		$exclude_urls = $this->getConfig('exclude_urls');
+		if (!empty($exclude_urls)) {
+			foreach ($exclude_urls as $exclude_url) {
+				if (OperationLogsUtils::startsWith($request_url, $exclude_url)) {
+					return $next($request, $response);
+				}
+			}
+		}
+
+		// 除外設定(ユーザーエージェント)
+		$user_agent = @$request->getHeader('User-Agent')[0];
+		$exclude_user_agents = $this->getConfig('exclude_user_agents');
+		if (!is_null($user_agent) && !empty($exclude_user_agents)) {
+			foreach ($exclude_user_agents as $exclude_user_agent) {
+				if (strpos($user_agent, $exclude_user_agent) !== false) {
+					return $next($request, $response);
+				}
 			}
 		}
 
 		$request_time = $this->_getCurrentDateTime();
 
+		// リクエスト処理
+		// ------------------------------
 		$response = $next($request, $response);
 
 		// リクエスト後処理
+		// ------------------------------
+		// 除外設定(クライアントIP)
+		$client_ip = Router::getRequest()->clientIp();
+		$exclude_ips = $this->getConfig('exclude_ips');
+		if (!empty($exclude_ips)) {
+			foreach ($exclude_ips as $exclude_ip) {
+				if (OperationLogsUtils::startsWith($client_ip, $exclude_ip)) {
+					return $response;
+				}
+			}
+		}
+
 		$response_time = $this->_getCurrentDateTime();
 
 		$this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
 		$entity = $this->OperationLogs->newEntity([
-				'client_ip' => Router::getRequest()->clientIp(),
-				'user_agent' => @$request->getHeader('User-Agent')[0],
+				'client_ip' => $client_ip,
+				'user_agent' => $user_agent,
 				'request_url' => $request_url,
 				'request_time' => $request_time,
 				'response_time' => $response_time,
