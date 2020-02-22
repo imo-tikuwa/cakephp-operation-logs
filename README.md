@@ -49,24 +49,38 @@ use OperationLogs\Middleware\OperationLogsMiddleware;
     }
 ```
 
+## Options.
+| option name | option type | default | example | memo |
+| - | - | - | - | - |
+| exclude_urls | string array | \[ '/debug-kit' \] | \[ '/debug-kit', '/admin' \] | Exclude with prefix match |
+| exclude_ips | string array | \[\] | \[ '192.168', '::' \] | Exclude with prefix match |
+| exclude_user_agents | string array | \[\] | \[ 'Safari', 'Edge' \] | Exclude with broad match |
+
 ## Data summary commands.
 daily_summaryコマンド、monthly_summaryコマンド、hourly_summaryコマンドがあります。  
 operation_logsテーブルのデータを元にクライアントIP、ユーザーエージェント、リクエストURLなどでグルーピングしたデータを集計します。  
 
-daily_summaryコマンドは--target_ymdオプションで集計日を設定可能。  
+### daily_summary command.
+--target_ymdオプションで集計日を設定可能。  
 未指定のときは前日のデータを集計します。  
 データはoperation_logs_dailyテーブルに記録されます。  
+```
+cake daily_summary --target_ymd=2020-02-13
+```
 
-monthly_summaryコマンドは--target_ymオプションで集計年月を6桁の数字で設定可能。  
+### monthly_summary command.
+--target_ymオプションで集計年月を6桁の数字で設定可能。  
 未指定の時は先月のデータを集計します。  
 データはoperation_logs_monthlyテーブルに記録されます。  
+```
+cake monthly_summary --target_ym=202002
+```
 
-hourly_summaryコマンドは--target_ymdオプションで集計日を設定可能。  
+### hourly_summary command.
+--target_ymdオプションで集計日を設定可能。  
 未指定の時は前日のデータを集計します。  
 1時間単位でデータを集計します。  
 データはoperation_logs_hourlyテーブルに記録されます。
 ```
-cake daily_summary --target_ymd=2020-02-13
-cake monthly_summary --target_ym=202002
 cake hourly_summary --target_ymd=2020-02-13
 ```
