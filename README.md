@@ -17,7 +17,8 @@ Plugin::load('OperationLogs', ['bootstrap' => true]);
 ```
 
 Execute the database table initialization command.   
-(Executing the command creates operation_logs, operation_logs_hourly, operation_logs_daily, operation_logs_monthly tables)
+※Executing the command will delete & create operation_logs, operation_logs_hourly, operation_logs_daily, operation_logs_monthly tables.  
+※If you want to record up to microseconds, specify the `--enable_micro` option.
 ```
 cake init_operation_logs
 ```
