@@ -31,6 +31,11 @@ class InitOperationLogsCommand extends Command
     public function buildOptionParser(ConsoleOptionParser $parser)
     {
         $parser = parent::buildOptionParser($parser);
+        // マイクロ秒まで記録するオプション(有効なときdatetime(3)ではなくdatetime(6)でテーブルを作成する)
+        $parser->addOption('enable_micro', [
+            'help' => 'record up to microseconds for the request_time and response_time columns.',
+            'boolean' => true,
+        ]);
 
         return $parser;
     }
@@ -55,14 +60,15 @@ class InitOperationLogsCommand extends Command
     	$connection->execute("DROP TABLE IF EXISTS `operation_logs_monthly`;");
 
     	// アクセス記録テーブル作成
+    	$datetime_column_definition = $args->getOption('enable_micro') ? "datetime(6)" : "datetime(3)";
     	$query = <<<EOL
 CREATE TABLE `operation_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `client_ip` text NOT NULL COMMENT 'クライアントIP',
   `user_agent` text DEFAULT NULL COMMENT 'ユーザーエージェント',
   `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
-  `request_time` datetime(3) NOT NULL COMMENT 'リクエスト日時',
-  `response_time` datetime(3) NOT NULL COMMENT 'レスポンス日時',
+  `request_time` {$datetime_column_definition} NOT NULL COMMENT 'リクエスト日時',
+  `response_time` {$datetime_column_definition} NOT NULL COMMENT 'レスポンス日時',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログ';
 EOL;

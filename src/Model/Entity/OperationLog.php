@@ -2,6 +2,7 @@
 namespace OperationLogs\Model\Entity;
 
 use Cake\ORM\Entity;
+use OperationLogs\Util\OperationLogsUtils;
 
 /**
  * OperationLog Entity
@@ -40,6 +41,7 @@ class OperationLog extends Entity
      * @return float
      */
     protected function _getExecTime() {
+
     	// Ymはさすがにいらないと思うので省略
     	$request_time = $this->request_time->format('dHis.u');
     	$response_time = $this->response_time->format('dHis.u');
@@ -47,8 +49,11 @@ class OperationLog extends Entity
     	if ($diff <= 0) {
     		return 0;
     	}
-    	// 小数3桁以後切り捨て
-    	$diff = round($diff - 0.5 * pow(0.1, 3), 3, PHP_ROUND_HALF_UP);
+
+    	// リクエスト日時、レスポンス日時のデータの末尾を元に四捨五入の桁を設定
+    	$precision = (OperationLogsUtils::endsWith($request_time, '000') && OperationLogsUtils::endsWith($response_time, '000')) ? 3 : 6;
+    	$diff = round($diff, $precision, PHP_ROUND_HALF_UP);
+
     	return $diff;
     }
 }

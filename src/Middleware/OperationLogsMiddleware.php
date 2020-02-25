@@ -121,12 +121,12 @@ class OperationLogsMiddleware
 	}
 
 	/**
-	 * ミリ秒(小数点3桁)付きのDateTimeオブジェクトを返す
+	 * マイクロ秒(小数点6桁)付きのDateTimeオブジェクトを返す
 	 * @return \DateTime
 	 */
 	private function _getCurrentDateTime() {
 		list($microtime, $unixtime) = explode(" ", microtime(false));
-		$milliseconds = substr($microtime, 1, 4);
+		$milliseconds = substr($microtime, 1, 7);
 		$datetimes = date('Y-m-d H:i:s', $unixtime);
 		return (new \DateTime("{$datetimes}{$milliseconds}"))->format('Y-m-d H:i:s.u');
 	}
