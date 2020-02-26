@@ -34,17 +34,23 @@ use OperationLogs\Middleware\OperationLogsMiddleware;
             ->add(new OperationLogsMiddleware([
                 'exclude_urls' => [
                     '/debug-kit',
-                    '/cake3-admin-baker',
-                    '/api'
-                ]
-                'exclude_ips' => [
-                    '192.168',
-                    '::'
-                ],
-                'exclude_user_agents' => [
-                    'Firefox/73'
+                    '/admin'
                 ]
             ]))
+            ;
+        return $middlewareQueue;
+    }
+```
+
+※If you want to log all requests without using the option, please replace with `OperationLogsSimpleMiddleware` middleware.
+```
+use OperationLogs\Middleware\OperationLogsSimpleMiddleware;
+
+    public function middleware($middlewareQueue)
+    {
+        $middlewareQueue
+            // Add operation_logs middleware.
+            ->add(new OperationLogsSimpleMiddleware())
             ;
         return $middlewareQueue;
     }
@@ -53,9 +59,15 @@ use OperationLogs\Middleware\OperationLogsMiddleware;
 ## Options.
 | option name | option type | default | example | memo |
 | - | - | - | - | - |
+| mode | string | 'exclude' | 'include' | Only 'exclude' and 'include' allowed |
 | exclude_urls | string array | \[ '/debug-kit' \] | \[ '/debug-kit', '/admin' \] | Exclude with prefix match |
 | exclude_ips | string array | \[\] | \[ '192.168', '::' \] | Exclude with prefix match |
 | exclude_user_agents | string array | \[\] | \[ 'Safari', 'Edge' \] | Exclude with broad match |
+| include_urls | string array | \[\] | \[ '/admin/top' \] | Include with prefix match |
+| include_ips | string array | \[\] | \[\] | Include with prefix match |
+| include_user_agents | string array | \[\] | \[ 'Firefox', 'Chrome' \] | Include with broad match |
+
+※If 'mode' is 'exclude' the 'include_〇〇' option is ignored. (And vice versa)
 
 ## Data summary commands.
 daily_summaryコマンド、monthly_summaryコマンド、hourly_summaryコマンドがあります。  
