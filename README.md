@@ -64,7 +64,7 @@ use OperationLogs\Middleware\OperationLogsSimpleMiddleware;
 | exclude_ips | string array | \[\] | \[ '192.168', '::' \] | Exclude with prefix match |
 | exclude_user_agents | string array | \[\] | \[ 'Safari', 'Edge' \] | Exclude with broad match |
 | include_urls | string array | \[\] | \[ '/admin/top' \] | Include with prefix match |
-| include_ips | string array | \[\] | \[\] | Include with prefix match |
+| include_ips | string array | \[\] | \[ '192.168.1.3' \] | Include with prefix match |
 | include_user_agents | string array | \[\] | \[ 'Firefox', 'Chrome' \] | Include with broad match |
 
 ※If 'mode' is 'exclude' the 'include_〇〇' option is ignored. (And vice versa)
