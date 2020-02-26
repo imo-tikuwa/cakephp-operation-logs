@@ -66,24 +66,14 @@ class OperationLogsMiddleware
 		// ------------------------------
 		// 除外設定(リクエストURL)
 		$request_url = $request->getUri()->getPath();
-		$exclude_urls = $this->getConfig('exclude_urls');
-		if (!empty($exclude_urls)) {
-			foreach ($exclude_urls as $exclude_url) {
-				if (OperationLogsUtils::startsWith($request_url, $exclude_url)) {
-					return $next($request, $response);
-				}
-			}
+		if ($this->_checkExcludeUrls($request_url)) {
+			return $next($request, $response);
 		}
 
 		// 除外設定(ユーザーエージェント)
 		$user_agent = @$request->getHeader('User-Agent')[0];
-		$exclude_user_agents = $this->getConfig('exclude_user_agents');
-		if (!is_null($user_agent) && !empty($exclude_user_agents)) {
-			foreach ($exclude_user_agents as $exclude_user_agent) {
-				if (strpos($user_agent, $exclude_user_agent) !== false) {
-					return $next($request, $response);
-				}
-			}
+		if ($this->_checkExcludeUserAgents($user_agent)) {
+			return $next($request, $response);
 		}
 
 		$request_time = $this->_getCurrentDateTime();
@@ -96,13 +86,8 @@ class OperationLogsMiddleware
 		// ------------------------------
 		// 除外設定(クライアントIP)
 		$client_ip = Router::getRequest()->clientIp();
-		$exclude_ips = $this->getConfig('exclude_ips');
-		if (!empty($exclude_ips)) {
-			foreach ($exclude_ips as $exclude_ip) {
-				if (OperationLogsUtils::startsWith($client_ip, $exclude_ip)) {
-					return $response;
-				}
-			}
+		if ($this->_checkExcludeIps($client_ip)) {
+			return $response;
 		}
 
 		$response_time = $this->_getCurrentDateTime();
@@ -118,6 +103,63 @@ class OperationLogsMiddleware
 		$this->OperationLogs->save($entity, ['validate' => false]);
 
 		return $response;
+	}
+
+	/**
+	 * 除外設定のURLと前方一致するかチェック
+	 * @param string $request_url
+	 * @return boolean
+	 */
+	private function _checkExcludeUrls($request_url = null) {
+
+		$exclude_urls = $this->getConfig('exclude_urls');
+		if (is_null($request_url) || empty($exclude_urls)) {
+			return false;
+		}
+		foreach ($exclude_urls as $exclude_url) {
+			if (OperationLogsUtils::startsWith($request_url, $exclude_url)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 除外設定のURLと前方一致するかチェック
+	 * @param string $client_ip
+	 * @return boolean
+	 */
+	private function _checkExcludeIps($client_ip = null) {
+
+		$exclude_ips = $this->getConfig('exclude_ips');
+		if (is_null($client_ip) || empty($exclude_ips)) {
+			return false;
+		}
+		foreach ($exclude_ips as $exclude_ip) {
+			if (OperationLogsUtils::startsWith($client_ip, $exclude_ip)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 除外設定のユーザーエージェントと部分一致するかチェック
+	 * @param string $user_agent
+	 * @return boolean
+	 */
+	private function _checkExcludeUserAgents($user_agent = null) {
+
+		$exclude_user_agents = $this->getConfig('exclude_user_agents');
+		if (is_null($user_agent) || empty($exclude_user_agents)) {
+			return false;
+		}
+		foreach ($exclude_user_agents as $exclude_user_agent) {
+			if (strpos($user_agent, $exclude_user_agent) !== false) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
