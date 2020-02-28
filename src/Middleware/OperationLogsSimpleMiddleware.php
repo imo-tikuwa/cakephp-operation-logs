@@ -5,7 +5,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
-
 /**
  * OperationLogsSimple middleware
  *
@@ -24,14 +23,14 @@ class OperationLogsSimpleMiddleware
 	 */
 	public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
 	{
-		$request_url = $request->getUri()->getPath();
-		$user_agent = @$request->getHeader('User-Agent')[0];
+		$request_url = $this->getRequestUrl($request);
+		$user_agent = $this->getUserAgent($request);
 
 		$request_time = $this->getCurrentDateTime();
 		$response = $next($request, $response);
 		$response_time = $this->getCurrentDateTime();
 
-		$client_ip = Router::getRequest()->clientIp();
+		$client_ip = $this->getClientIp();
 
 		$this->saveLog($client_ip, $user_agent, $request_url, $request_time, $response_time);
 
@@ -69,5 +68,34 @@ class OperationLogsSimpleMiddleware
 		$milliseconds = substr($microtime, 1, 7);
 		$datetimes = date('Y-m-d H:i:s', $unixtime);
 		return (new \DateTime("{$datetimes}{$milliseconds}"))->format('Y-m-d H:i:s.u');
+	}
+
+	/**
+	 * リクエストURLを返す
+	 * @param ServerRequestInterface $request
+	 * @return string
+	 */
+	protected function getRequestUrl(ServerRequestInterface $request)
+	{
+		return $request->getUri()->getPath();
+	}
+
+	/**
+	 * クライアントIPを返す
+	 * @return string
+	 */
+	protected function getClientIp()
+	{
+		return Router::getRequest()->clientIp();
+	}
+
+	/**
+	 * ユーザーエージェントを返す
+	 * @param ServerRequestInterface $request
+	 * @return string
+	 */
+	protected function  getUserAgent(ServerRequestInterface $request)
+	{
+		return @$request->getHeader('User-Agent')[0];
 	}
 }

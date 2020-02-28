@@ -3,7 +3,6 @@ namespace OperationLogs\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Cake\Routing\Router;
 use Cake\Core\InstanceConfigTrait;
 use OperationLogs\Util\OperationLogsUtils;
 use Cake\Http\Exception\InternalErrorException;
@@ -102,13 +101,13 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 		// リクエスト前処理
 		// ------------------------------
 		// リクエストURL
-		$request_url = $request->getUri()->getPath();
+		$request_url = $this->getRequestUrl($request);;
 		if ($this->_checkUrl($request_url)) {
 			return $next($request, $response);
 		}
 
 		// ユーザーエージェント
-		$user_agent = @$request->getHeader('User-Agent')[0];
+		$user_agent = $this->getUserAgent($request);
 		if ($this->_checkUserAgent($user_agent)) {
 			return $next($request, $response);
 		}
@@ -119,14 +118,14 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 		$response = $next($request, $response);
 		$response_time = $this->getCurrentDateTime();
 
-		// リクエスト後処理
-		// ------------------------------
 		// クライアントIP
-		$client_ip = Router::getRequest()->clientIp();
+		$client_ip = $this->getClientIp();
 		if ($this->_checkIp($client_ip)) {
 			return $response;
 		}
 
+		// リクエスト後処理
+		// ------------------------------
 		// ログを保存
 		$this->saveLog($client_ip, $user_agent, $request_url, $request_time, $response_time);
 
