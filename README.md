@@ -13,7 +13,11 @@ composer require imo-tikuwa/cakephp-operation-logs
 ## How to Use
 Load plugin to bootstrap.php
 ```
+// cakephp 3.6 or less
 Plugin::load('OperationLogs', ['bootstrap' => true]);
+
+// cakephp 3.7 or higher
+Application::addPlugin('OperationLogs', ['bootstrap' => true]);
 ```
 
 Execute the database table initialization command.   
