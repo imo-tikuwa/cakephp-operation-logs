@@ -2,7 +2,7 @@
 namespace OperationLogs\Command;
 
 use Cake\Console\Arguments;
-use Cake\Console\Command;
+use Cake\Command\Command;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
@@ -112,7 +112,7 @@ class DailySummaryCommand extends Command
 	 * {@inheritDoc}
 	 * @see \Cake\Console\Command::buildOptionParser()
 	 */
-	protected function buildOptionParser(ConsoleOptionParser $parser)
+	protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
 	{
 		$parser
 		->addOption('target_ymd', [
