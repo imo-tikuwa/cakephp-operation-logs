@@ -2,7 +2,6 @@
 
 namespace OperationLogs\Util;
 
-
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -18,7 +17,8 @@ class OperationLogsUtils {
 	 * @param string $needle
 	 * @return boolean
 	 */
-	public static function startsWith($haystack, $needle) {
+	public static function startsWith($haystack, $needle)
+	{
 		return $needle === "" || strpos($haystack, $needle) === 0;
 	}
 
@@ -28,7 +28,8 @@ class OperationLogsUtils {
 	 * @param string $needle
 	 * @return boolean
 	 */
-	public static function endsWith($haystack, $needle) {
+	public static function endsWith($haystack, $needle)
+	{
 		return $needle === "" || substr($haystack, - strlen($needle)) === $needle;
 	}
 
@@ -39,8 +40,8 @@ class OperationLogsUtils {
 	 * @param \DateTime $target_date
 	 * @return NULL
 	 */
-	public static function findSummaryLogs($date_type = OL_DATE_TYPE_DAILY, $summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
-
+	public static function findSummaryLogs($date_type = OL_DATE_TYPE_DAILY, $summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
+	{
 		if (is_null($target_date)) {
 			$target_date = new \DateTime();
 		}
@@ -48,13 +49,13 @@ class OperationLogsUtils {
 		$summary_logs = null;
 		switch ($date_type) {
 			case OL_DATE_TYPE_HOURLY:
-				$summary_logs = $this->findHourlySummaryLogs($summary_type, $target_date);
+				$summary_logs = self::findHourlySummaryLogs($summary_type, $target_date);
 				break;
 			case OL_DATE_TYPE_DAILY:
-				$summary_logs = $this->findDailySummaryLogs($summary_type, $target_date);
+				$summary_logs = self::findDailySummaryLogs($summary_type, $target_date);
 				break;
 			case OL_DATE_TYPE_MONTHLY:
-				$summary_logs = $this->findMonthlySummaryLogs($summary_type, $target_date);
+				$summary_logs = self::findMonthlySummaryLogs($summary_type, $target_date);
 				break;
 			default:
 				break;
@@ -75,8 +76,8 @@ class OperationLogsUtils {
 	 *
 	 * @param \DateTime $target_date 基準日
 	 */
-	public static function findHourlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
-
+	public static function findHourlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
+	{
 		if (is_null($target_date)) {
 			$date = new \DateTime();
 		} else {
@@ -130,8 +131,8 @@ class OperationLogsUtils {
 	 *
 	 * @param \DateTime $target_date 基準日
 	 */
-	public static function findDailySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
-
+	public static function findDailySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
+	{
 		if (is_null($target_date)) {
 			$date = new \DateTime();
 		} else {
@@ -187,8 +188,8 @@ class OperationLogsUtils {
 	 *
 	 * @param \DateTime $target_date 基準日
 	 */
-	public static function findMonthlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null) {
-
+	public static function findMonthlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
+	{
 		if (is_null($target_date)) {
 			$date = new \DateTime();
 		} else {
@@ -225,13 +226,10 @@ class OperationLogsUtils {
 			}
 			// https://stackoverflow.com/questions/162032/merge-two-arrays-as-key-value-pairs-in-php
 			$keys = array_merge(array_keys($one_year_count_arr), array_keys($summary_log));
-  		 	$vals = array_merge($one_year_count_arr, $summary_log);
+			$vals = array_merge($one_year_count_arr, $summary_log);
 			$summary_logs[$groupedby] = array_combine($keys, $vals);
 		}
 
 		return $summary_logs;
 	}
 }
-
-
-

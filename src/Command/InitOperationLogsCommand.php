@@ -17,8 +17,8 @@ use Cake\Datasource\ConnectionManager;
  */
 class InitOperationLogsCommand extends Command
 {
-	private $start_msg = "############ init operation_logs command start. #############";
-	private $end_msg   = "############ init operation_logs command end.   #############";
+    private $start_msg = "############ init operation_logs command start. #############";
+    private $end_msg   = "############ init operation_logs command end.   #############";
 
     /**
      * Hook method for defining this command's option parser.
@@ -49,74 +49,74 @@ class InitOperationLogsCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
-    	$io->out($this->start_msg);
+        $io->out($this->start_msg);
 
-    	$connection = ConnectionManager::get('default');
+        $connection = ConnectionManager::get('default');
 
-    	// いったん全テーブル削除
-    	$connection->execute("DROP TABLE IF EXISTS `operation_logs`;");
-    	$connection->execute("DROP TABLE IF EXISTS `operation_logs_hourly`;");
-    	$connection->execute("DROP TABLE IF EXISTS `operation_logs_daily`;");
-    	$connection->execute("DROP TABLE IF EXISTS `operation_logs_monthly`;");
+        // いったん全テーブル削除
+        $connection->execute("DROP TABLE IF EXISTS `operation_logs`;");
+        $connection->execute("DROP TABLE IF EXISTS `operation_logs_hourly`;");
+        $connection->execute("DROP TABLE IF EXISTS `operation_logs_daily`;");
+        $connection->execute("DROP TABLE IF EXISTS `operation_logs_monthly`;");
 
-    	// アクセス記録テーブル作成
-    	$datetime_column_definition = $args->getOption('enable_micro') ? "datetime(6)" : "datetime(3)";
-    	$query = <<<EOL
+        // アクセス記録テーブル作成
+        $datetime_column_definition = $args->getOption('enable_micro') ? "datetime(6)" : "datetime(3)";
+        $query = <<<EOL
 CREATE TABLE `operation_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `client_ip` text NOT NULL COMMENT 'クライアントIP',
-  `user_agent` text DEFAULT NULL COMMENT 'ユーザーエージェント',
-  `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
-  `request_time` {$datetime_column_definition} NOT NULL COMMENT 'リクエスト日時',
-  `response_time` {$datetime_column_definition} NOT NULL COMMENT 'レスポンス日時',
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `client_ip` text NOT NULL COMMENT 'クライアントIP',
+    `user_agent` text DEFAULT NULL COMMENT 'ユーザーエージェント',
+    `request_url` varchar(255) NOT NULL COMMENT 'リクエストURL',
+    `request_time` {$datetime_column_definition} NOT NULL COMMENT 'リクエスト日時',
+    `response_time` {$datetime_column_definition} NOT NULL COMMENT 'レスポンス日時',
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログ';
 EOL;
-    	$connection->execute($query);
-    	$io->out("`operation_logs` table created.");
+        $connection->execute($query);
+        $io->out("`operation_logs` table created.");
 
-    	// アクセス集計テーブル(1時間毎)作成
-    	$query = <<<EOL
+        // アクセス集計テーブル(1時間毎)作成
+        $query = <<<EOL
 CREATE TABLE `operation_logs_hourly` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `target_time` datetime NOT NULL COMMENT '対象日時',
-  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
-  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
-  `counter` int(11) NOT NULL COMMENT 'カウンタ',
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `target_time` datetime NOT NULL COMMENT '対象日時',
+    `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
+    `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
+    `counter` int(11) NOT NULL COMMENT 'カウンタ',
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(1時間毎)';
 EOL;
-    	$connection->execute($query);
-    	$io->out("`operation_logs_hourly` table created.");
+        $connection->execute($query);
+        $io->out("`operation_logs_hourly` table created.");
 
-    	// アクセス集計テーブル(日毎)作成
-    	$query = <<<EOL
+        // アクセス集計テーブル(日毎)作成
+        $query = <<<EOL
 CREATE TABLE `operation_logs_daily` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `target_ymd` date NOT NULL COMMENT '対象日',
-  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
-  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
-  `counter` int(11) NOT NULL COMMENT 'カウンタ',
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `target_ymd` date NOT NULL COMMENT '対象日',
+    `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
+    `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
+    `counter` int(11) NOT NULL COMMENT 'カウンタ',
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(日毎)';
 EOL;
-    	$connection->execute($query);
-    	$io->out("`operation_logs_daily` table created.");
+        $connection->execute($query);
+        $io->out("`operation_logs_daily` table created.");
 
-    	// アクセス集計テーブル(月毎)作成
-    	$query = <<<EOL
+        // アクセス集計テーブル(月毎)作成
+        $query = <<<EOL
 CREATE TABLE `operation_logs_monthly` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `target_ym` int(6) NOT NULL COMMENT '対象年月',
-  `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
-  `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
-  `counter` int(11) NOT NULL COMMENT 'カウンタ',
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `target_ym` int(6) NOT NULL COMMENT '対象年月',
+    `summary_type` varchar(20) NOT NULL COMMENT '集計タイプ',
+    `groupedby` varchar(255) DEFAULT NULL COMMENT 'グループ元',
+    `counter` int(11) NOT NULL COMMENT 'カウンタ',
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作ログの集計(月毎)';
 EOL;
-    	$connection->execute($query);
-    	$io->out("`operation_logs_monthly` table created.");
+        $connection->execute($query);
+        $io->out("`operation_logs_monthly` table created.");
 
-    	$io->out($this->end_msg);
+        $io->out($this->end_msg);
     }
 }

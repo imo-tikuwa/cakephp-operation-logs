@@ -59,8 +59,8 @@ class MonthlySummaryCommand extends Command
 
 		// 集計対象データを取得
 		$daily_operation_logs = $this->OperationLogsDaily->find()->select(['id', 'summary_type', 'groupedby', 'counter'])->where([
-				'target_ymd >=' => $target_ym_date->format('Y-m-d'),
-				'target_ymd <=' => $target_ym_date->modify('last day of this month')->format('Y-m-d')
+			'target_ymd >=' => $target_ym_date->format('Y-m-d'),
+			'target_ymd <=' => $target_ym_date->modify('last day of this month')->format('Y-m-d')
 		])
 		->enableHydration(false)
 		->toArray();
@@ -113,7 +113,7 @@ class MonthlySummaryCommand extends Command
 	{
 		$parser
 		->addOption('target_ym', [
-				'help' => 'input summary target year and month with 6 digits. example 202001',
+			'help' => 'input summary target year and month with 6 digits. example 202001',
 		]);
 
 		return $parser;
