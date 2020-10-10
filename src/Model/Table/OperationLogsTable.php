@@ -36,19 +36,6 @@ class OperationLogsTable extends Table
     }
 
     /**
-     * TableSchemaの初期化処理
-     * {@inheritDoc}
-     * @see \Cake\ORM\Table::_initializeSchema()
-     */
-    protected function _initializeSchema(TableSchemaInterface $schema): TableSchemaInterface
-    {
-        $schema->setColumnType("request_time", 'datetimefractional');
-        $schema->setColumnType("response_time", 'datetimefractional');
-
-        return $schema;
-    }
-
-    /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
