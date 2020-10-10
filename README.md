@@ -1,4 +1,4 @@
-# OperationLogs plugin for CakePHP
+# OperationLogs plugin for CakePHP 3 and 4
 
 ## Installation
 
@@ -7,7 +7,11 @@ You can install this plugin into your CakePHP application using [composer](https
 The recommended way to install composer packages is:
 
 ```
-composer require imo-tikuwa/cakephp-operation-logs
+# for CakePHP4
+composer require imo-tikuwa/cakephp-operation-logs "2.*"
+
+# for CakePHP3
+composer require imo-tikuwa/cakephp-operation-logs "1.*"
 ```
 
 ## How to Use
@@ -18,6 +22,16 @@ Plugin::load('OperationLogs', ['bootstrap' => true]);
 
 // cakephp 3.7 or higher
 Application::addPlugin('OperationLogs', ['bootstrap' => true]);
+```
+
+or Application.php
+```diff
+    public function bootstrap()
+    {
+        parent::bootstrap();
+
++        $this->addPlugin('OperationLogs', ['bootstrap' => true]);
+    }
 ```
 
 Execute the database table initialization command.   
