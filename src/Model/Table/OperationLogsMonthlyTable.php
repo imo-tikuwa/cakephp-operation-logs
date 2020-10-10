@@ -44,28 +44,28 @@ class OperationLogsMonthlyTable extends Table
     {
         $validator
             ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->integer('target_ym')
             ->requirePresence('target_ym', 'create')
-            ->notEmpty('target_ym');
+            ->notEmptyString('target_ym');
 
         $validator
             ->scalar('summary_type')
             ->maxLength('summary_type', 20)
             ->requirePresence('summary_type', 'create')
-            ->notEmpty('summary_type');
+            ->notEmptyString('summary_type');
 
         $validator
             ->scalar('groupedby')
             ->maxLength('groupedby', 255)
-            ->allowEmpty('groupedby');
+            ->allowEmptyString('groupedby');
 
         $validator
             ->integer('counter')
             ->requirePresence('counter', 'create')
-            ->notEmpty('counter');
+            ->notEmptyString('counter');
 
         return $validator;
     }
