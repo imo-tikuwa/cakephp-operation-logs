@@ -1,11 +1,6 @@
 <?php
 
 use Cake\Core\Configure;
-use Cake\Database\Type;
-
-// DateTimeMicroType追加
-Type::map('datetimemicro', 'OperationLogs\Database\Type\DateTimeMicroType');
-Type::build('datetimemicro')->useImmutable();
 
 define('OL_SUMMARY_TYPE_ALL',			"all");
 define('OL_SUMMARY_TYPE_IP',			"ip");

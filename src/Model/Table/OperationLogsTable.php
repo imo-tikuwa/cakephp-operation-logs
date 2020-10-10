@@ -3,7 +3,7 @@ namespace OperationLogs\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cake\Database\Schema\TableSchema;
+use Cake\Database\Schema\TableSchemaInterface;
 
 /**
  * OperationLogs Model
@@ -40,11 +40,11 @@ class OperationLogsTable extends Table
      * {@inheritDoc}
      * @see \Cake\ORM\Table::_initializeSchema()
      */
-    protected function _initializeSchema(TableSchema $schema) {
+    protected function _initializeSchema(TableSchemaInterface $schema): TableSchemaInterface
+    {
+        $schema->setColumnType("request_time", 'datetimefractional');
+        $schema->setColumnType("response_time", 'datetimefractional');
 
-        // リクエスト日時とレスポンス日時のカラムタイプ設定をデフォルトのdatetimeから独自定義したdatetimemicroへ上書き
-        $schema->setColumnType("request_time", 'datetimemicro');
-        $schema->setColumnType("response_time", 'datetimemicro');
         return $schema;
     }
 
@@ -58,33 +58,33 @@ class OperationLogsTable extends Table
     {
         $validator
             ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->scalar('client_ip')
             ->requirePresence('client_ip', 'create')
-            ->notEmpty('client_ip');
+            ->notEmptyString('client_ip');
 
         $validator
             ->scalar('user_agent')
             ->requirePresence('user_agent', 'create')
-            ->notEmpty('user_agent');
+            ->notEmptyString('user_agent');
 
         $validator
             ->scalar('request_url')
             ->maxLength('request_url', 255)
             ->requirePresence('request_url', 'create')
-            ->notEmpty('request_url');
+            ->notEmptyString('request_url');
 
         $validator
             ->dateTime('request_time')
             ->requirePresence('request_time', 'create')
-            ->notEmpty('request_time');
+            ->notEmptyDateTime('request_time');
 
         $validator
             ->dateTime('response_time')
             ->requirePresence('response_time', 'create')
-            ->notEmpty('response_time');
+            ->notEmptyDateTime('response_time');
 
         return $validator;
     }
