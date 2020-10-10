@@ -25,7 +25,7 @@ class OperationLogsHourlyTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -40,32 +40,32 @@ class OperationLogsHourlyTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
             ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->dateTime('target_time')
             ->requirePresence('target_time', 'create')
-            ->notEmpty('target_time');
+            ->notEmptyDateTime('target_time');
 
         $validator
             ->scalar('summary_type')
             ->maxLength('summary_type', 20)
             ->requirePresence('summary_type', 'create')
-            ->notEmpty('summary_type');
+            ->notEmptyString('summary_type');
 
         $validator
             ->scalar('groupedby')
             ->maxLength('groupedby', 255)
-            ->allowEmpty('groupedby');
+            ->allowEmptyString('groupedby');
 
         $validator
             ->integer('counter')
             ->requirePresence('counter', 'create')
-            ->notEmpty('counter');
+            ->notEmptyString('counter');
 
         return $validator;
     }

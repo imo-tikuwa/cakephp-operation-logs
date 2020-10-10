@@ -40,20 +40,20 @@ class OperationLog extends Entity
      * リクエストの実行時間を返す(単位：秒)
      * @return float
      */
-    protected function _getExecTime() {
+    protected function _getExecTime()
+    {
+        // Ymはさすがにいらないと思うので省略
+        $request_time = $this->request_time->format('dHis.u');
+        $response_time = $this->response_time->format('dHis.u');
+        $diff = $response_time - $request_time;
+        if ($diff <= 0) {
+            return 0;
+        }
 
-    	// Ymはさすがにいらないと思うので省略
-    	$request_time = $this->request_time->format('dHis.u');
-    	$response_time = $this->response_time->format('dHis.u');
-    	$diff = $response_time - $request_time;
-    	if ($diff <= 0) {
-    		return 0;
-    	}
+        // リクエスト日時、レスポンス日時のデータの末尾を元に四捨五入の桁を設定
+        $precision = (OperationLogsUtils::endsWith($request_time, '000') && OperationLogsUtils::endsWith($response_time, '000')) ? 3 : 6;
+        $diff = round($diff, $precision, PHP_ROUND_HALF_UP);
 
-    	// リクエスト日時、レスポンス日時のデータの末尾を元に四捨五入の桁を設定
-    	$precision = (OperationLogsUtils::endsWith($request_time, '000') && OperationLogsUtils::endsWith($response_time, '000')) ? 3 : 6;
-    	$diff = round($diff, $precision, PHP_ROUND_HALF_UP);
-
-    	return $diff;
+        return $diff;
     }
 }
