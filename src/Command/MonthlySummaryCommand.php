@@ -23,19 +23,20 @@ class MonthlySummaryCommand extends Command
     private $start_msg = "############ monthly summary command start. ############";
     private $end_msg   = "############ monthly summary command end.   ############";
 
-    public function __construct() {
-        $this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
-        $this->OperationLogsMonthly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsMonthly');
-    }
-
     /**
      * 集計処理
-     * {@inheritDoc}
      * @see \Cake\Console\Command::execute()
+     *
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io The console io
+     * @return int|null|void The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
         $io->out($this->start_msg);
+
+        $this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
+        $this->OperationLogsMonthly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsMonthly');
 
         // 集計対象年月
         if ($args->hasOption('target_ym')) {
@@ -82,7 +83,7 @@ class MonthlySummaryCommand extends Command
             $grouped_data = Hash::combine($summary_data, '{n}.id', '{n}', '{n}.groupedby');
             foreach ($grouped_data as $groupedby => $each_group_data) {
                 $counter = 0;
-                foreach($each_group_data as $each_data) {
+                foreach ($each_group_data as $each_data) {
                     $counter += $each_data['counter'];
                 }
                 if ($summary_type === OL_SUMMARY_TYPE_ALL) {
@@ -102,12 +103,16 @@ class MonthlySummaryCommand extends Command
         $this->OperationLogsMonthly->saveMany($operation_logs_monthly_entities);
         $io->out("operation_logs_monthly " . count($operation_logs_monthly_entities) . " records registered.");
         $io->out($this->end_msg);
+
+        return static::CODE_SUCCESS;
     }
 
     /**
      * オプションパーサー
-     * {@inheritDoc}
      * @see \Cake\Console\Command::buildOptionParser()
+     *
+     * @param \Cake\Console\ConsoleOptionParser $parser The parser to be defined
+     * @return \Cake\Console\ConsoleOptionParser The built parser.
      */
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {

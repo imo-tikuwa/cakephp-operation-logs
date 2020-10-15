@@ -21,19 +21,20 @@ class HourlySummaryCommand extends Command
     private $start_msg = "############ hourly summary command start. #############";
     private $end_msg   = "############ hourly summary command end.   #############";
 
-    public function __construct() {
-        $this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
-        $this->OperationLogsHourly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsHourly');
-    }
-
     /**
      * 集計処理
-     * {@inheritDoc}
      * @see \Cake\Console\Command::execute()
+     *
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io The console io
+     * @return int|null|void The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
         $io->out($this->start_msg);
+
+        $this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
+        $this->OperationLogsHourly = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsHourly');
 
         // 集計対象日
         if ($args->hasOption('target_ymd')) {
@@ -59,7 +60,6 @@ class HourlySummaryCommand extends Command
 
         $operation_logs_hourly_entities = [];
         for ($hour = 0; $hour <= 23; $hour++) {
-
             // 1時間毎で集計対象データを取得していく
             $target_h = sprintf('%02d', $hour);
             $operation_logs = $this->OperationLogs->find()->select(['id', 'client_ip', 'user_agent', 'request_url', 'request_time'])->where([
@@ -110,12 +110,16 @@ class HourlySummaryCommand extends Command
         $this->OperationLogsHourly->saveMany($operation_logs_hourly_entities);
         $io->out("operation_logs_hourly " . count($operation_logs_hourly_entities) . " records registered.");
         $io->out($this->end_msg);
+
+        return static::CODE_SUCCESS;
     }
 
     /**
      * オプションパーサー
-     * {@inheritDoc}
      * @see \Cake\Console\Command::buildOptionParser()
+     *
+     * @param \Cake\Console\ConsoleOptionParser $parser The parser to be defined
+     * @return \Cake\Console\ConsoleOptionParser The built parser.
      */
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {

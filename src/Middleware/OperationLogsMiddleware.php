@@ -58,7 +58,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * constructer
-     * @param array $config
+     * @param array $config 設定配列
      */
     public function __construct(array $config = [])
     {
@@ -101,7 +101,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
         // リクエスト前処理
         // ------------------------------
         // リクエストURL
-        $request_url = $this->getRequestUrl($request);;
+        $request_url = $this->getRequestUrl($request);
         if ($this->_checkUrl($request_url)) {
             return $next($request, $response);
         }
@@ -134,7 +134,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * URLチェック
-     * @param string $request_url
+     * @param string $request_url リクエストURL
      * @return boolean
      */
     private function _checkUrl($request_url = null)
@@ -149,7 +149,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * IPチェック
-     * @param string $client_ip
+     * @param string $client_ip クライアントIP
      * @return boolean
      */
     private function _checkIP($client_ip = null)
@@ -164,7 +164,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * ユーザーエージェントチェック
-     * @param string $user_agent
+     * @param string $user_agent ユーザーエージェント
      * @return boolean
      */
     private function _checkUserAgent($user_agent = null)
@@ -179,7 +179,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * 除外設定のURLと前方一致するかチェック
-     * @param string $request_url
+     * @param string $request_url リクエストURL
      * @return boolean
      */
     private function __checkExcludeUrls($request_url = null)
@@ -198,7 +198,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * 除外設定のIPと前方一致するかチェック
-     * @param string $client_ip
+     * @param string $client_ip クライアントIP
      * @return boolean
      */
     private function __checkExcludeIps($client_ip = null)
@@ -217,7 +217,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * 除外設定のユーザーエージェントと部分一致するかチェック
-     * @param string $user_agent
+     * @param string $user_agent ユーザーエージェント
      * @return boolean
      */
     private function __checkExcludeUserAgents($user_agent = null)
@@ -236,7 +236,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * 包含設定のURLと前方一致するかチェック
-     * @param string $request_url
+     * @param string $request_url リクエストURL
      * @return boolean
      */
     private function __checkIncludeUrls($request_url = null)
@@ -255,7 +255,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * 包含設定のIPと前方一致するかチェック
-     * @param string $client_ip
+     * @param string $client_ip クライアントIP
      * @return boolean
      */
     private function __checkIncludeIps($client_ip = null)
@@ -274,7 +274,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
 
     /**
      * 包含設定のユーザーエージェントと部分一致するかチェック
-     * @param string $user_agent
+     * @param string $user_agent ユーザーエージェント
      * @return boolean
      */
     private function __checkIncludeUserAgents($user_agent = null)
@@ -290,6 +290,4 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
         }
         return false;
     }
-
-
 }

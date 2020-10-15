@@ -21,19 +21,20 @@ class DailySummaryCommand extends Command
     private $start_msg = "############ daily summary command start. ##############";
     private $end_msg   = "############ daily summary command end.   ##############";
 
-    public function __construct() {
-        $this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
-        $this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
-    }
-
     /**
      * 集計処理
-     * {@inheritDoc}
      * @see \Cake\Console\Command::execute()
+     *
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io The console io
+     * @return int|null|void The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
         $io->out($this->start_msg);
+
+        $this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
+        $this->OperationLogsDaily = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogsDaily');
 
         // 集計対象日
         if ($args->hasOption('target_ymd')) {
@@ -105,12 +106,16 @@ class DailySummaryCommand extends Command
         $this->OperationLogsDaily->saveMany($operation_logs_daily_entities);
         $io->out("operation_logs_daily " . count($operation_logs_daily_entities) . " records registered.");
         $io->out($this->end_msg);
+
+        return static::CODE_SUCCESS;
     }
 
     /**
      * オプションパーサー
-     * {@inheritDoc}
      * @see \Cake\Console\Command::buildOptionParser()
+     *
+     * @param \Cake\Console\ConsoleOptionParser $parser The parser to be defined
+     * @return \Cake\Console\ConsoleOptionParser The built parser.
      */
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {

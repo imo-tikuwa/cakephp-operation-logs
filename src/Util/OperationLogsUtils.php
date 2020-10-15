@@ -9,12 +9,12 @@ use Cake\Utility\Hash;
  * プラグイン内で使用する関数をまとめたUtilクラス
  * @author tikuwa
  */
-class OperationLogsUtils {
-
+class OperationLogsUtils
+{
     /**
      * 文字列$haystackは$needleで始まる？
-     * @param string $haystack
-     * @param string $needle
+     * @param string $haystack 干し草の山
+     * @param string $needle 山の中の針
      * @return boolean
      */
     public static function startsWith($haystack, $needle)
@@ -24,8 +24,8 @@ class OperationLogsUtils {
 
     /**
      * 文字列$haystackは$needleで終わる？
-     * @param string $haystack
-     * @param string $needle
+     * @param string $haystack 干し草の山
+     * @param string $needle 山の中の針
      * @return boolean
      */
     public static function endsWith($haystack, $needle)
@@ -35,10 +35,19 @@ class OperationLogsUtils {
 
     /**
      * 集計データを取得する
-     * @param string $date_type
-     * @param string $summary_type
-     * @param \DateTime $target_date
-     * @return NULL
+     * @param string $date_type グルーピング定数 以下のいずれかを指定してください
+     * OL_DATE_TYPE_HOURLY = 時間単位で集計します
+     * OL_DATE_TYPE_DAILY = 日単位で集計します
+     * OL_DATE_TYPE_MONTHLY = 月単位で集計します
+     *
+     * @param string $summary_type グルーピング定数 以下のいずれかを指定してください
+     * OL_SUMMARY_TYPE_ALL = グルーピングしなかった際の集計データを返します
+     * OL_SUMMARY_TYPE_IP = IPアドレスでグルーピングした集計データを返します
+     * OL_SUMMARY_TYPE_USER_AGENT = ユーザーエージェントでグルーピングした集計データを返します
+     * OL_SUMMARY_TYPE_URL = リクエストURLでグルーピングした集計データを返します
+     *
+     * @param \DateTime $target_date 基準日
+     * @return array|null
      */
     public static function findSummaryLogs($date_type = OL_DATE_TYPE_DAILY, $summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
     {
@@ -75,6 +84,7 @@ class OperationLogsUtils {
      * OL_SUMMARY_TYPE_URL = リクエストURLでグルーピングした集計データを返します
      *
      * @param \DateTime $target_date 基準日
+     * @return array $summary_logs
      */
     public static function findHourlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
     {
@@ -130,6 +140,7 @@ class OperationLogsUtils {
      * OL_SUMMARY_TYPE_URL = リクエストURLでグルーピングした集計データを返します
      *
      * @param \DateTime $target_date 基準日
+     * @return array $summary_logs
      */
     public static function findDailySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
     {
@@ -187,6 +198,7 @@ class OperationLogsUtils {
      * OL_SUMMARY_TYPE_URL = リクエストURLでグルーピングした集計データを返します
      *
      * @param \DateTime $target_date 基準日
+     * @return array $summary_logs
      */
     public static function findMonthlySummaryLogs($summary_type = OL_SUMMARY_TYPE_ALL, \DateTime $target_date = null)
     {

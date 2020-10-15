@@ -5,6 +5,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+
 /**
  * OperationLogsSimple middleware
  *
@@ -39,13 +40,14 @@ class OperationLogsSimpleMiddleware
 
     /**
      * 保存処理
-     * @param string $client_ip
-     * @param string $user_agent
-     * @param string $request_url
-     * @param \DateTime $request_time
-     * @param \DateTime $response_time
+     * @param string $client_ip クライアントIP
+     * @param string $user_agent ユーザーエージェント
+     * @param string $request_url リクエストURL
+     * @param \DateTime $request_time リクエスト開始時間
+     * @param \DateTime $response_time リクエスト終了時間
+     * @return void
      */
-    protected function saveLog($client_ip = "", $user_agent = null, $request_url = "", $request_time, $response_time)
+    protected function saveLog($client_ip = "", $user_agent = null, $request_url = "", $request_time = null, $response_time = null)
     {
         $this->OperationLogs = TableRegistry::getTableLocator()->get('OperationLogs.OperationLogs');
         $entity = $this->OperationLogs->newEntity([
@@ -72,7 +74,7 @@ class OperationLogsSimpleMiddleware
 
     /**
      * リクエストURLを返す
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $request The request
      * @return string
      */
     protected function getRequestUrl(ServerRequestInterface $request)
@@ -91,7 +93,7 @@ class OperationLogsSimpleMiddleware
 
     /**
      * ユーザーエージェントを返す
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $request The request
      * @return string
      */
     protected function getUserAgent(ServerRequestInterface $request)

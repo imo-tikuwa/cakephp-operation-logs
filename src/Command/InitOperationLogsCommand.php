@@ -45,7 +45,7 @@ class InitOperationLogsCommand extends Command
      *
      * @param \Cake\Console\Arguments $args The command arguments.
      * @param \Cake\Console\ConsoleIo $io The console io
-     * @return null|int The exit code or null for success
+     * @return int|null|void The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
@@ -116,7 +116,8 @@ CREATE TABLE `operation_logs_monthly` (
 EOL;
         $connection->execute($query);
         $io->out("`operation_logs_monthly` table created.");
-
         $io->out($this->end_msg);
+
+        return static::CODE_SUCCESS;
     }
 }
