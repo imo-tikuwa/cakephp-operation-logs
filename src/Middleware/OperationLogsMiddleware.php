@@ -23,6 +23,8 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
      * @var array
      */
     protected $_defaultConfig = [
+        // データベースコネクション
+        'connection' => 'default',
         // モード設定
         // exclude or include
         // デフォルトはexclude
@@ -62,6 +64,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
      */
     public function __construct(array $config = [])
     {
+        parent::__construct($config);
         if (isset($config['mode'])) {
             if (!in_array($config['mode'], ['exclude', 'include'], true)) {
                 throw new InternalErrorException(__('OperationLogsMiddleware mode option is invalid.'));

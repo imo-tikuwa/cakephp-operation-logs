@@ -1,10 +1,14 @@
 <?php
 namespace OperationLogs\Middleware;
 
+use Cake\Core\InstanceConfigTrait;
+use Cake\Datasource\ConnectionManager;
+use Cake\Log\LogTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Exception;
 
 /**
  * OperationLogsSimple middleware
@@ -13,6 +17,34 @@ use Cake\Routing\Router;
  */
 class OperationLogsSimpleMiddleware
 {
+    use InstanceConfigTrait, LogTrait;
+
+    /**
+     * default configs.
+     * @var array
+     */
+    protected $_defaultConfig = [
+        // データベースコネクション
+        'connection' => 'default',
+    ];
+
+    /**
+     * constructer
+     * @param array $config 設定配列
+     */
+    public function __construct(array $config = [])
+    {
+        $connection_name = 'default';
+        if (isset($config['connection']) && $config['connection'] !== null) {
+            $connection_name = $config['connection'];
+        }
+        $conn = ConnectionManager::get($connection_name);
+        $table_names = $conn->getSchemaCollection()->listTables();
+        if (!in_array('operation_logs', $table_names, true)) {
+            throw new Exception("The OperationLogs table did not exist. Execute the init_operation_logs command.");
+        }
+        $this->setConfig('connection', $connection_name, false);
+    }
 
     /**
      * Invoke method.
