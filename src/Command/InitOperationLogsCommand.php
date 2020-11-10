@@ -35,6 +35,10 @@ class InitOperationLogsCommand extends Command
         $parser->addOption('enable_micro', [
             'help' => 'record up to microseconds for the request_time and response_time columns.',
             'boolean' => true,
+        ])->addOption('connection', [
+            'short' => 'c',
+            'default' => 'default',
+            'help' => 'The datasource connection to get data from.',
         ]);
 
         return $parser;
@@ -51,7 +55,7 @@ class InitOperationLogsCommand extends Command
     {
         $io->out($this->start_msg);
 
-        $connection = ConnectionManager::get('default');
+        $connection = ConnectionManager::get($args->getOption('connection'));
 
         // いったん全テーブル削除
         $connection->execute("DROP TABLE IF EXISTS `operation_logs`;");

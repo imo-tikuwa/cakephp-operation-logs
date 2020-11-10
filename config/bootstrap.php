@@ -2,14 +2,16 @@
 
 use Cake\Core\Configure;
 
-define('OL_SUMMARY_TYPE_ALL',           "all");
-define('OL_SUMMARY_TYPE_IP',            "ip");
-define('OL_SUMMARY_TYPE_USER_AGENT',    "ua");
-define('OL_SUMMARY_TYPE_URL',           "url");
+if (!defined('OL_SUMMARY_TYPE_ALL')) {
+    define('OL_SUMMARY_TYPE_ALL',           "all");
+    define('OL_SUMMARY_TYPE_IP',            "ip");
+    define('OL_SUMMARY_TYPE_USER_AGENT',    "ua");
+    define('OL_SUMMARY_TYPE_URL',           "url");
 
-define('OL_DATE_TYPE_HOURLY',           "hourly");
-define('OL_DATE_TYPE_DAILY',            "daily");
-define('OL_DATE_TYPE_MONTHLY',          "monthly");
+    define('OL_DATE_TYPE_HOURLY',           "hourly");
+    define('OL_DATE_TYPE_DAILY',            "daily");
+    define('OL_DATE_TYPE_MONTHLY',          "monthly");
+}
 
 try {
     // 操作ログのコード定義作成
