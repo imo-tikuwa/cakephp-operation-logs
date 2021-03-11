@@ -192,7 +192,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
             return false;
         }
         foreach ($exclude_urls as $exclude_url) {
-            if (OperationLogsUtils::startsWith($request_url, $exclude_url)) {
+            if (str_starts_with($request_url, $exclude_url)) {
                 return true;
             }
         }
@@ -211,7 +211,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
             return false;
         }
         foreach ($exclude_ips as $exclude_ip) {
-            if (OperationLogsUtils::startsWith($client_ip, $exclude_ip)) {
+            if (str_starts_with($client_ip, $exclude_ip)) {
                 return true;
             }
         }
@@ -230,7 +230,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
             return false;
         }
         foreach ($exclude_user_agents as $exclude_user_agent) {
-            if (strpos($user_agent, $exclude_user_agent) !== false) {
+            if (str_contains($user_agent, $exclude_user_agent)) {
                 return true;
             }
         }
@@ -249,7 +249,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
             return false;
         }
         foreach ($include_urls as $include_url) {
-            if (OperationLogsUtils::startsWith($request_url, $include_url)) {
+            if (str_starts_with($request_url, $include_url)) {
                 return true;
             }
         }
@@ -268,7 +268,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
             return false;
         }
         foreach ($include_ips as $include_ip) {
-            if (OperationLogsUtils::startsWith($client_ip, $include_ip)) {
+            if (str_starts_with($client_ip, $include_ip)) {
                 return true;
             }
         }
@@ -287,7 +287,7 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
             return false;
         }
         foreach ($include_user_agents as $include_user_agent) {
-            if (strpos($user_agent, $include_user_agent) !== false) {
+            if (str_contains($user_agent, $include_user_agent)) {
                 return true;
             }
         }

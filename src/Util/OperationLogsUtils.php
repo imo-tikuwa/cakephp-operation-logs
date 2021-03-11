@@ -12,28 +12,6 @@ use Cake\Utility\Hash;
 class OperationLogsUtils
 {
     /**
-     * 文字列$haystackは$needleで始まる？
-     * @param string $haystack 干し草の山
-     * @param string $needle 山の中の針
-     * @return boolean
-     */
-    public static function startsWith($haystack, $needle)
-    {
-        return $needle === "" || strpos($haystack, $needle) === 0;
-    }
-
-    /**
-     * 文字列$haystackは$needleで終わる？
-     * @param string $haystack 干し草の山
-     * @param string $needle 山の中の針
-     * @return boolean
-     */
-    public static function endsWith($haystack, $needle)
-    {
-        return $needle === "" || substr($haystack, - strlen($needle)) === $needle;
-    }
-
-    /**
      * 集計データを取得する
      * @param string $date_type グルーピング定数 以下のいずれかを指定してください
      * OL_DATE_TYPE_HOURLY = 時間単位で集計します
