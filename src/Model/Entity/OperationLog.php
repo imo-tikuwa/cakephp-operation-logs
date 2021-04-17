@@ -51,7 +51,7 @@ class OperationLog extends Entity
         }
 
         // リクエスト日時、レスポンス日時のデータの末尾を元に四捨五入の桁を設定
-        $precision = (OperationLogsUtils::endsWith($request_time, '000') && OperationLogsUtils::endsWith($response_time, '000')) ? 3 : 6;
+        $precision = (str_ends_with($request_time, '000') && str_ends_with($response_time, '000')) ? 3 : 6;
         $diff = round($diff, $precision, PHP_ROUND_HALF_UP);
 
         return $diff;
