@@ -9,7 +9,8 @@
     },
     "autoload": {
         "psr-4": {
-            "OperationLogs\\": "src/"
+            "OperationLogs\\": "src/",
+            "OperationLogs\\Test\\": "tests/"
         }
     },
     "autoload-dev": {
