@@ -4,8 +4,9 @@ namespace OperationLogs\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Cake\Core\InstanceConfigTrait;
-use OperationLogs\Util\OperationLogsUtils;
 use Cake\Http\Exception\InternalErrorException;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * OperationLogs middleware
@@ -14,7 +15,7 @@ use Cake\Http\Exception\InternalErrorException;
  *
  * @see https://book.cakephp.org/3/ja/controllers/middleware.html
  */
-class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
+class OperationLogsMiddleware extends OperationLogsSimpleMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
 
@@ -92,33 +93,32 @@ class OperationLogsMiddleware extends OperationLogsSimpleMiddleware
     }
 
     /**
-     * Invoke method.
+     * Record request information in the OperationLogs table as needed.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Message\ResponseInterface $response The response.
-     * @param callable $next Callback to invoke the next middleware.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // リクエスト前処理
         // ------------------------------
         // リクエストURL
         $request_url = $this->getRequestUrl($request);
         if ($this->_checkUrl($request_url)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         // ユーザーエージェント
         $user_agent = $this->getUserAgent($request);
         if ($this->_checkUserAgent($user_agent)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         // リクエスト処理
         // ------------------------------
         $request_time = $this->getCurrentDateTime();
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
         $response_time = $this->getCurrentDateTime();
 
         // クライアントIP
