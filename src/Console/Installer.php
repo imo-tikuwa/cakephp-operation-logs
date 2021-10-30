@@ -52,6 +52,23 @@ class Installer
      */
     public static function copySchemaFiles($io)
     {
+        // コピー処理を走らせる前に事前確認
+        $validator = function ($arg) {
+            if (in_array($arg, ['Y', 'y', 'N', 'n'])) {
+                return $arg;
+            }
+            throw new Exception('This is not a valid answer. Please choose Y or n.');
+        };
+        $setFolderPermissions = $io->askAndValidate(
+            '<info>Do you want to copy the schema file of the table used by the OperationLogs plugin to the application dir ? (Default to Y)</info> [<comment>Y,n</comment>]? ',
+            $validator,
+            10,
+            'Y'
+        );
+        if (in_array($setFolderPermissions, ['n', 'N'])) {
+            return;
+        }
+
         if (!defined('DS')) {
             define('DS', DIRECTORY_SEPARATOR);
         }
@@ -67,7 +84,10 @@ class Installer
 
         // ディレクトリが存在しない場合は確認のうえ作成
         if (!file_exists($app_schema_dir)) {
-            $io->error("The path listed on the right was not found. 「{$app_schema_dir}」");
+            $io->write([
+                'The path was not found.',
+                "path = {$app_schema_dir}"
+            ]);
             $validator = function ($arg) {
                 if (in_array($arg, ['Y', 'y', 'N', 'n'])) {
                     return $arg;
