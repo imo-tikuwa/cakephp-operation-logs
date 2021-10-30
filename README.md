@@ -89,17 +89,11 @@ use OperationLogs\Middleware\OperationLogsSimpleMiddleware;
 ※If 'mode' is 'exclude' the 'include_〇〇' option is ignored. (And vice versa)
 
 ## CakePHP4.3以上のバージョンでPHPUnitテストを実施する場合
-Fixtureのアップグレードに伴い、PHPUnitテスト実行時にスキーマファイルをロードする必要があります。
-1. config/schemaディレクトリに存在するSQLファイルをアプリケーション本体のconfig/schemaディレクトリ以下にコピーする
-2. アプリケーション本体のtests/bootstrap.phpで他のスキーマファイルと同様にSchemaLoader::loadSchemaFiles()でロードする
-
-以下のような作業となります。
+CakePHP4.3で実施されたFixtureのアップグレードに伴い、PHPUnitテストの際にスキーマファイルをロードする必要があります。
+以下のような操作でOperationLogsプラグイン内に同梱するスキーマファイルをアプリケーション本体のschemaディレクトリにコピーすることができます。
 ```
-cd vendor/imo-tikuwa/cakephp-operation-logs
-cp config/schema/operation_logs.sql <path/to/app/config/schema>
-cp config/schema/operation_logs_daily.sql <path/to/app/config/schema>
-cp config/schema/operation_logs_hourly.sql <path/to/app/config/schema>
-cp config/schema/operation_logs_monthly.sql <path/to/app/config/schema>
+composer require imo-tikuwa/cakephp-operation-logs "2.*"
+composer run-script post-install-cmd --working-dir=vendor\imo-tikuwa\cakephp-operation-logs
 ```
 
 ## Data summary commands.
