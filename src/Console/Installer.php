@@ -40,15 +40,17 @@ class Installer
      */
     public static function postInstall(Event $event)
     {
-        static::copySchemaFiles();
+        $io = $event->getIO();
+        static::copySchemaFiles($io);
     }
 
     /**
      * Copy the schema file of the table used by OperationLogs to the config/schema directory of the APP.
      *
+     * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function copySchemaFiles()
+    public static function copySchemaFiles($io)
     {
         if (!defined('DS')) {
             define('DS', DIRECTORY_SEPARATOR);
@@ -57,11 +59,32 @@ class Installer
         $plugin_root_dir = dirname(__DIR__, 2);
         $schema_dir = $plugin_root_dir . DS . 'config' . DS . 'schema' . DS;
 
-        // 相対参照するがplugins以下にインストールした場合と、composerでインストールした場合でさかのぼるディレクトリの数が異なる
+        // plugins以下で開発した場合と、composerでインストールした場合でさかのぼるディレクトリの数が異なる
         // プラグインのルートの一つ上のディレクトリ名がpluginsかどうかで相対レベルを分岐
         $plugin_parent_dirname = basename(dirname($plugin_root_dir));
-        $relative_level = $plugin_parent_dirname === 'plugins' ? 2 : 4;
+        $relative_level = $plugin_parent_dirname === 'plugins' ? 2 : 3;
         $app_schema_dir = dirname($plugin_root_dir, $relative_level) . DS . 'config' . DS . 'schema' . DS;
+
+        // ディレクトリが存在しない場合は確認のうえ作成
+        if (!file_exists($app_schema_dir)) {
+            $io->error("The path listed on the right was not found. 「{$app_schema_dir}」");
+            $validator = function ($arg) {
+                if (in_array($arg, ['Y', 'y', 'N', 'n'])) {
+                    return $arg;
+                }
+                throw new Exception('This is not a valid answer. Please choose Y or n.');
+            };
+            $setFolderPermissions = $io->askAndValidate(
+                '<info>Do you want to create a schema directory ? (Default to Y)</info> [<comment>Y,n</comment>]? ',
+                $validator,
+                10,
+                'Y'
+            );
+            if (in_array($setFolderPermissions, ['n', 'N'])) {
+                return;
+            }
+            mkdir($app_schema_dir);
+        }
 
         foreach (glob($schema_dir . '*.sql') as $schema_file_path) {
             $schema_file_name = basename($schema_file_path);
