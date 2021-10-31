@@ -9,13 +9,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Exception;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * OperationLogsSimple middleware
  *
  * @property \OperationLogs\Model\Table\OperationLogsTable $OperationLogs
  */
-class OperationLogsSimpleMiddleware
+class OperationLogsSimpleMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait, LogTrait;
 
@@ -47,20 +49,19 @@ class OperationLogsSimpleMiddleware
     }
 
     /**
-     * Invoke method.
+     * Record request information in the OperationLogs table as needed.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Message\ResponseInterface $response The response.
-     * @param callable $next Callback to invoke the next middleware.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $request_url = $this->getRequestUrl($request);
         $user_agent = $this->getUserAgent($request);
 
         $request_time = $this->getCurrentDateTime();
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
         $response_time = $this->getCurrentDateTime();
 
         $client_ip = $this->getClientIp();
